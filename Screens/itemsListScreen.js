@@ -1,36 +1,22 @@
-import React from 'react';
-import { View, Text, FlatList, Button } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { addItem, removeItem } from '../Redux/reducers'; // Import your Redux actions
+import React from "react";
+import { View, Text, FlatList, Button, SafeAreaView } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
+import { addItem, removeItem } from "../Redux/reducers";
+import ItemForm from "../components/ItemsForm";
 
 function ItemListScreen() {
-  const shoppingList = useSelector(state => state); // Assuming your shopping list is stored in the Redux store
+  const shoppingList = useSelector((state) => state);
 
   const dispatch = useDispatch();
 
-  const handleAddItem = () => {
-    // You should implement a form to capture item details, including name, quantity, price, and image.
-    // For simplicity, we'll add a hardcoded item here.
-    const newItem = {
-      id: Date.now().toString(),
-      name: 'Sample Item',
-      quantity: 1,
-      price: 10.0,
-      image: 'sample.jpg',
-    };
-
-    dispatch(addItem(newItem));
-  }
-
   const handleRemoveItem = (itemId) => {
     dispatch(removeItem(itemId));
-  }
+  };
 
   return (
-    <View>
+    <SafeAreaView>
       <Text>Shopping List</Text>
-      <Button title="Add Item" onPress={handleAddItem} />
-
+      <ItemForm />
       <FlatList
         data={shoppingList}
         keyExtractor={(item) => item.id}
@@ -38,12 +24,12 @@ function ItemListScreen() {
           <View>
             <Text>{item.name}</Text>
             <Text>Quantity: {item.quantity}</Text>
-            <Text>Price: ${item.price}</Text>
+            <Text>Price: R{item.price}</Text>
             <Button title="Remove" onPress={() => handleRemoveItem(item.id)} />
           </View>
         )}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
