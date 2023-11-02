@@ -7,10 +7,13 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView,
+  Keyboard,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/reducers";
+import add from "../assets/add.jpg";
 import * as ImagePicker from "expo-image-picker";
 
 function ItemForm({ toggleModal }) {
@@ -27,7 +30,7 @@ function ItemForm({ toggleModal }) {
       const { status } =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
-        alert("Permission to access image library is required.");
+        alert("Permission to access the image library is required.");
       }
     })();
   }, []);
@@ -60,6 +63,8 @@ function ItemForm({ toggleModal }) {
     toggleModal();
   };
 
+  // ...
+
   const selectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -68,14 +73,33 @@ function ItemForm({ toggleModal }) {
       quality: 1,
     });
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      // Updated to "canceled"
+      const selectedImage = result.assets[0];
+      setImage(selectedImage.uri);
     }
   };
 
+  // ...
+
+  const handleScroll = () => {
+    Keyboard.dismiss(); // Close the keyboard when scrolling
+  };
+
   return (
-    <SafeAreaView style={styles.formContainer}>
-      <Text>Add Item</Text>
+    <ScrollView
+      contentContainerStyle={styles.formContainer}
+      onScroll={handleScroll}
+      style={styles.modalBackground} // Background color style
+    >
+      <View style={styles.header}>
+        <Text style={{ fontSize: 30, textAlign: "center" }}>Add Item</Text>
+        <TouchableOpacity onPress={toggleModal} style={styles.closeButton}>
+          <Text style={styles.closeButtonText}>X</Text>
+        </TouchableOpacity>
+      </View>
+      <Image source={add} style={{ height: 300, width: "100%" }} />
+
       <TextInput
         style={styles.input}
         placeholder="Product Name"
@@ -88,7 +112,6 @@ function ItemForm({ toggleModal }) {
         value={storeName}
         onChangeText={(text) => setStoreName(text)}
       />
-     
       <TextInput
         style={styles.input}
         placeholder="Price"
@@ -103,21 +126,44 @@ function ItemForm({ toggleModal }) {
         onChangeText={(text) => setQuantity(text)}
         keyboardType="numeric"
       />
-       <TouchableOpacity title="Select Image" onPress={selectImage}> <Text>Upload Image</Text></TouchableOpacity >
-      {image ? (
-        <Image source={{ uri: image }} style={styles.imagePreview} />
-      ) : null}
-      <Text>Total Price: R{calculateTotalPrice()}</Text>
-      <Button title="Add" onPress={handleAddItem} />
-      <Button title="Close" onPress={toggleModal} />
-    </SafeAreaView>
+      <Text style={{ marginVertical: 15 }}>
+        Total Price: R{calculateTotalPrice()} &&{" "}
+        {image ? (
+          <Image source={{ uri: image }} style={styles.imagePreview} />
+        ) : null}
+      </Text>
+      <TouchableOpacity onPress={selectImage} style={styles.uploadButton}>
+        <Text style={styles.uploadButtonText}>Upload Image</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={handleAddItem} style={styles.addButton}>
+        <Text style={styles.addButtonText}>Add</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   formContainer: {
-    padding: 20,
-    backgroundColor: "#fff",
+    alignItems: "center",
+    flexGrow: 1,
+    marginTop: 35,
+  },
+  modalBackground: {
+    backgroundColor: "#fff", // Background color style
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  closeButton: {
+    padding: 10,
+    left: 100,
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: "red",
   },
   input: {
     height: 40,
@@ -126,6 +172,32 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     padding: 8,
     backgroundColor: "#fff",
+    width: "80%",
+  },
+  uploadButton: {
+    height: 30,
+    width: "80%",
+    backgroundColor: "red",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  uploadButtonText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 26,
+  },
+  addButton: {
+    height: 30,
+    width: "80%",
+    backgroundColor: "red",
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  addButtonText: {
+    textAlign: "center",
+    color: "#fff",
+    fontSize: 26,
   },
   imagePreview: {
     width: 100,
