@@ -10,24 +10,36 @@ import {
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/reducers";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 function ItemForm() {
   const [itemName, setItemName] = useState("");
   const [storeName, setStoreName] = useState("");
   const [image, setImage] = useState("");
   const [price, setPrice] = useState("");
+  const [quantity, setQuantity] = useState("1"); // Initial quantity is 1
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         alert("Permission to access image library is required.");
       }
     })();
   }, []);
+
+  // Calculate total price based on quantity and unit price
+  const calculateTotalPrice = () => {
+    const unitPrice = parseFloat(price);
+    const qty = parseInt(quantity);
+    if (!isNaN(unitPrice) && !isNaN(qty)) {
+      return (unitPrice * qty).toFixed(2); // Ensure 2 decimal places
+    }
+    return "0.00";
+  };
 
   const handleAddItem = () => {
     const newItem = {
@@ -36,6 +48,7 @@ function ItemForm() {
       store: storeName,
       image,
       price: parseFloat(price),
+      quantity: parseInt(quantity),
     };
 
     dispatch(addItem(newItem));
@@ -43,6 +56,7 @@ function ItemForm() {
     setStoreName("");
     setImage("");
     setPrice("");
+    setQuantity("1"); // Reset quantity to 1
   };
 
   const selectImage = async () => {
@@ -84,6 +98,14 @@ function ItemForm() {
         onChangeText={(text) => setPrice(text)}
         keyboardType="numeric"
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Quantity"
+        value={quantity}
+        onChangeText={(text) => setQuantity(text)}
+        keyboardType="numeric"
+      />
+      <Text>Total Price: R{calculateTotalPrice()}</Text>
       <Button title="Add" onPress={handleAddItem} />
     </SafeAreaView>
   );
