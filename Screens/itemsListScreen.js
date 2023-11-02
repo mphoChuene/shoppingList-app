@@ -28,8 +28,11 @@ function ItemListScreen() {
     dispatch(removeItem(itemId));
   };
 
-  // Calculate the total cost
-  const totalCost = shoppingList.reduce((total, item) => total + item.price, 0);
+  // Calculate the total cost by multiplying price with quantity for each item
+  const totalCost = shoppingList.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
 
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
@@ -69,7 +72,7 @@ function ItemListScreen() {
               <View style={styles.textContainer}>
                 <Text>{item.name}</Text>
                 <Text>Quantity: {item.quantity}</Text>
-                <Text>Price: R{item.price}</Text>
+                <Text>Price: R{item.price.toFixed(2)}</Text>
               </View>
               <Button title="Remove" onPress={() => handleRemoveItem(item.id)} />
             </View>

@@ -27,8 +27,7 @@ function ItemForm({ toggleModal }) {
 
   useEffect(() => {
     (async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== "granted") {
         alert("Permission to access the image library is required.");
       }
@@ -63,8 +62,6 @@ function ItemForm({ toggleModal }) {
     toggleModal();
   };
 
-  // ...
-
   const selectImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -73,14 +70,11 @@ function ItemForm({ toggleModal }) {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      // Updated to "canceled"
+    if (!result.cancelled) {
       const selectedImage = result.assets[0];
       setImage(selectedImage.uri);
     }
   };
-
-  // ...
 
   const handleScroll = () => {
     Keyboard.dismiss(); // Close the keyboard when scrolling
@@ -90,7 +84,7 @@ function ItemForm({ toggleModal }) {
     <ScrollView
       contentContainerStyle={styles.formContainer}
       onScroll={handleScroll}
-      style={styles.modalBackground} // Background color style
+      style={styles.modalBackground}
     >
       <View style={styles.header}>
         <Text style={{ fontSize: 30, textAlign: "center" }}>Add Item</Text>
@@ -127,10 +121,10 @@ function ItemForm({ toggleModal }) {
         keyboardType="numeric"
       />
       <Text style={{ marginVertical: 15 }}>
-        Total Price: R{calculateTotalPrice()} &&{" "}
         {image ? (
           <Image source={{ uri: image }} style={styles.imagePreview} />
-        ) : null}
+        ) : null}{" "}
+        Total Price: R{calculateTotalPrice()}
       </Text>
       <TouchableOpacity onPress={selectImage} style={styles.uploadButton}>
         <Text style={styles.uploadButtonText}>Upload Image</Text>
@@ -150,7 +144,7 @@ const styles = StyleSheet.create({
     marginTop: 35,
   },
   modalBackground: {
-    backgroundColor: "#fff", // Background color style
+    backgroundColor: "#fff",
   },
   header: {
     flexDirection: "row",
@@ -200,8 +194,8 @@ const styles = StyleSheet.create({
     fontSize: 26,
   },
   imagePreview: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
   },
 });
 
