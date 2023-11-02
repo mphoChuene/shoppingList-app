@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   SafeAreaView,
+  TouchableOpacity
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/reducers";
@@ -87,10 +88,7 @@ function ItemForm({ toggleModal }) {
         value={storeName}
         onChangeText={(text) => setStoreName(text)}
       />
-      <Button title="Select Image" onPress={selectImage} />
-      {image ? (
-        <Image source={{ uri: image }} style={styles.imagePreview} />
-      ) : null}
+     
       <TextInput
         style={styles.input}
         placeholder="Price"
@@ -105,6 +103,10 @@ function ItemForm({ toggleModal }) {
         onChangeText={(text) => setQuantity(text)}
         keyboardType="numeric"
       />
+       <TouchableOpacity title="Select Image" onPress={selectImage}> <Text>Upload Image</Text></TouchableOpacity >
+      {image ? (
+        <Image source={{ uri: image }} style={styles.imagePreview} />
+      ) : null}
       <Text>Total Price: R{calculateTotalPrice()}</Text>
       <Button title="Add" onPress={handleAddItem} />
       <Button title="Close" onPress={toggleModal} />
