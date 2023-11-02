@@ -12,12 +12,12 @@ import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/reducers";
 import * as ImagePicker from "expo-image-picker";
 
-function ItemForm() {
+function ItemForm({ toggleModal }) {
   const [itemName, setItemName] = useState("");
   const [storeName, setStoreName] = useState("");
   const [image, setImage] = useState("");
   const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("1"); // Initial quantity is 1
+  const [quantity, setQuantity] = useState("1");
 
   const dispatch = useDispatch();
 
@@ -31,12 +31,11 @@ function ItemForm() {
     })();
   }, []);
 
-  // Calculate total price based on quantity and unit price
   const calculateTotalPrice = () => {
     const unitPrice = parseFloat(price);
     const qty = parseInt(quantity);
     if (!isNaN(unitPrice) && !isNaN(qty)) {
-      return (unitPrice * qty).toFixed(2); // Ensure 2 decimal places
+      return (unitPrice * qty).toFixed(2);
     }
     return "0.00";
   };
@@ -56,7 +55,8 @@ function ItemForm() {
     setStoreName("");
     setImage("");
     setPrice("");
-    setQuantity("1"); // Reset quantity to 1
+    setQuantity("1");
+    toggleModal();
   };
 
   const selectImage = async () => {
@@ -107,13 +107,15 @@ function ItemForm() {
       />
       <Text>Total Price: R{calculateTotalPrice()}</Text>
       <Button title="Add" onPress={handleAddItem} />
+      <Button title="Close" onPress={toggleModal} />
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   formContainer: {
-    padding: 16,
+    padding: 20,
+    backgroundColor: "#fff",
   },
   input: {
     height: 40,
@@ -121,6 +123,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12,
     padding: 8,
+    backgroundColor: "#fff",
   },
   imagePreview: {
     width: 100,
