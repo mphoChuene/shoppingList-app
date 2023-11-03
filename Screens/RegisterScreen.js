@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     alignItems: "center",
+    marginHorizontal:7,
     // justifyContent: "center",
     backgroundColor: "#fff",
   },

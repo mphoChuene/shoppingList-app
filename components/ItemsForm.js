@@ -92,39 +92,39 @@ function ItemForm({ toggleModal }) {
           <Text style={styles.closeButtonText}>X</Text>
         </TouchableOpacity>
       </View>
-      <Image source={add} style={{ height: 300, width: "100%" }} />
+      <Image source={add} style={styles.image} />
 
       <TextInput
         style={styles.input}
         placeholder="Product Name"
+        placeholderTextColor="#888"
         value={itemName}
         onChangeText={(text) => setItemName(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Store Name"
+        placeholderTextColor="#888"
         value={storeName}
         onChangeText={(text) => setStoreName(text)}
       />
       <TextInput
         style={styles.input}
         placeholder="Price"
+        placeholderTextColor="#888"
         value={price}
         onChangeText={(text) => setPrice(text)}
         keyboardType="numeric"
       />
       <TextInput
-        style={styles.input}
+        style={styles.quantityInput}
         placeholder="Quantity"
         value={quantity}
         onChangeText={(text) => setQuantity(text)}
         keyboardType="numeric"
       />
       <Text style={{ marginVertical: 15 }}>
-        {image ? (
-          <Image source={{ uri: image }} style={styles.imagePreview} />
-        ) : null}{" "}
-        Total Price: R{calculateTotalPrice()}
+        {image ? <Image source={{ uri: image }} style={styles.imagePreview} /> : null} Total Price: R{calculateTotalPrice()}
       </Text>
       <TouchableOpacity onPress={selectImage} style={styles.uploadButton}>
         <Text style={styles.uploadButtonText}>Upload Image</Text>
@@ -168,6 +168,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     width: "80%",
   },
+  quantityInput: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 12,
+    padding: 8,
+    backgroundColor: "#fff",
+    width: "80%",
+  },
   uploadButton: {
     height: 30,
     width: "80%",
@@ -185,6 +194,7 @@ const styles = StyleSheet.create({
     width: "80%",
     backgroundColor: "red",
     marginTop: 10,
+    marginBottom: 50, // Added margin to push the "Add" button up
     justifyContent: "center",
     alignItems: "center",
   },
@@ -192,6 +202,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#fff",
     fontSize: 26,
+  },
+  image: {
+    height: 200, // Adjusted the height
+    width: "100%",
   },
   imagePreview: {
     width: 80,
