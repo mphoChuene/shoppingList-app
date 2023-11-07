@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
+  TextInput, // Add TextInput for search input
   StyleSheet,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +20,7 @@ function ItemListScreen() {
   const shoppingList = useSelector((state) => state);
   const dispatch = useDispatch();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(""); // State for the search term
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
@@ -34,11 +36,25 @@ function ItemListScreen() {
     0
   );
 
+  // Filter the shoppingList based on the search term
+  const filteredList = shoppingList.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <SafeAreaView style={{ alignItems: "center" }}>
       <Text style={{ fontSize: 30, fontWeight: "bold", marginVertical: 10 }}>
         Shopping List
       </Text>
+
+      {/* Add the search input field */}
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search products..."
+        value={searchTerm}
+        onChangeText={(text) => setSearchTerm(text)}
+      />
+
       <Image
         source={home}
         style={{
@@ -48,6 +64,7 @@ function ItemListScreen() {
           alignSelf: "center",
         }}
       />
+
       <TouchableOpacity
         title="Create Shopping List"
         onPress={toggleModal}
@@ -62,8 +79,9 @@ function ItemListScreen() {
           Create list{" "}
         </Text>
       </TouchableOpacity>
+
       <FlatList
-        data={shoppingList}
+        data={filteredList} 
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View>
@@ -91,6 +109,7 @@ function ItemListScreen() {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   listItemContainer: {
     flex: 1,
@@ -101,12 +120,21 @@ const styles = StyleSheet.create({
   image: {
     width: 70,
     height: 70,
-    marginHorizontal: 15, // Add some spacing between text and image
+    marginHorizontal: 15,
   },
   totalContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     margin: 20,
+  },
+  searchInput: {
+    height: 40,
+    width: "80%",
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingLeft: 10,
+    margin: 10,
   },
 });
 
